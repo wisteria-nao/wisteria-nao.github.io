@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>やりたいことリスト</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    input, button { padding: 8px; }
+    li { margin: 5px 0; }
+    .done { text-decoration: line-through; color: gray; }
+  </style>
+</head>
+<body>
+  <h1>やりたいことリスト</h1>
+  <input id="todoInput" type="text" placeholder="やりたいことを入力">
+  <button onclick="addTodo()">追加</button>
+  <ul id="todoList"></ul>
+
+  <script>
+    const input = document.getElementById("todoInput");
+    const list = document.getElementById("todoList");
+
+    const todos = JSON.parse(localStorage.getItem("todos") || "[]");
+    todos.forEach(addItem);
+
+    function addTodo() {
+      const text = input.value.trim();
+      if (text) {
+        const item = { text, done: false };
+        todos.push(item);
+        addItem(item);
+        save();
+        input.value = "";
+      }
+    }
+
+    function addItem(item) {
+      const li = document.createElement("li");
+      li.textContent = item.text;
+      if (item.done) li.classList.add("done");
+      li.onclick = () => {
+        item.done = !item.done;
+        li.classList.toggle("done");
+        save();
+      };
+      list.appendChild(li);
+    }
+
+    function save() {
+      localStorage.setItem("todos", JSON.stringify(todos));
+    }
+  </script>
+</body>
+</html>
